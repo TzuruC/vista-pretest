@@ -1,0 +1,8 @@
+th:last-child,
+td:last-child{
+    max-width: 56px;
+    // text-align: right;
+}
+th:nth-child(2){
+    min-width: 12%;
+}

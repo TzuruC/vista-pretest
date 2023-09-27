@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>後台登入</title>
+  </head>
+  <body>
+
+    <%- include('././layout/admin-header'); -%>
+
+    <div class="container-fluid mt-3 px-0">
+      <table class="table">
+        <thead>
+          <tr class="table-dark">
+            <th scope="col">#</th>
+            <th scope="col">標題</th>
+            <th scope="col">內文</th>
+            <th scope="col">編輯</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>帆船鼻大草原</td>
+            <td>帆船鼻位於綠島東南角，有「綠島地毯」之稱，由於地形突出，地勢又高出四周，屬東北季季風可長驅直入的衝風帶；再加上後天的放牧，遂形成低草原景觀。草原邊緣懸崖可以俯視朝日溫泉與海參坪，也是綠島居高臨下欣賞日出、月昇，沐浴海風的最佳景點之一。
+            </td>
+            <td>
+              <a href="" class="link-primary">編輯</a><br>
+              <a href="" class="link-danger">刪除</a>
+            
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <%- include('./layout/footer'); -%>
+    
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script type="module" src="../all.js"></script>
+  </body>
+</html>

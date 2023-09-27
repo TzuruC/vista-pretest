@@ -4,20 +4,20 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>註冊</title>
+    <title>後台登入</title>
   </head>
   <body>
 
-    <%- include('./layout/header'); -%>
+    <%- include('././layout/admin-header'); -%>
 
     <div class="container mt-4">
-      <h2 class="fw-bold">註冊</h2>
+      <h2 class="fw-bold">後台登入</h2>
       <div class="my-4">
-      <label class="mt-3 mb-1" for="email">信箱</label>
+      <label class="mt-3 mb-1" for="email">帳號</label>
       <input class="form-control" name="email" type="text">
       <label class="mt-3 mb-1" for="pswd">密碼</label>
       <input class="form-control" name="pswd" type="password">
-      <button type="button" class="me-2 my-3 btn btn-outline-primary">註冊帳號</button>      
+      <a type="button" class="me-2 my-3 btn btn-outline-primary" href="list.html">送出</a>      
       </div>
     </div>
 
