@@ -1,7 +1,6 @@
 import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
-console.log("Hello world!");
 
 //取得前台景點列表
 const getVistas = "http://localhost:3000/vistas/";
@@ -21,7 +20,9 @@ axios.get(getVistas)
                     <p class="card-text">` +
                     ary[i].description.substring(0,16)
                     + `...</p>
-                    <a href="vista-detail.html" class="btn btn-primary">看詳細</a>
+                    <a href="vista-detail.html?id=` +
+                    ary[i].id
+                    + `" class="btn btn-primary">看詳細</a>
                 </div>
                 </div>
             </li> 
@@ -31,10 +32,22 @@ axios.get(getVistas)
     
 
 //取得前台單一景點
-
+const urlParams = new URLSearchParams(window.location.search);
+const vistaId = urlParams.get('id');
+let getOneVista = `http://localhost:3000/vistas?id=${vistaId}`
+axios.get(getOneVista)    
+    .then(        
+        function(res){
+            const data = res.data;
+            const dataContainer = document.getElementById('vistaContainer');
+            dataContainer.innerHTML = JSON.stringify(data);
+        }
+    )
+    .catch(error => {
+        console.error('Error loading data:', error);
+    });
 
 //取得後台景點列表
-
 axios.get(getVistas)
     .then(
         function(res){
@@ -53,10 +66,25 @@ axios.get(getVistas)
                 ary[i].description
                 +`</td>
                 <td>
-                  <a href="" class="link-primary">編輯</a><br>
-                  <a href="" class="link-danger">刪除</a>                
+                <a href="admin-edit.html?id=` +
+                ary[i].id
+                + `" class="link-primary">編輯</a><br>
+                <a href="" class="link-danger">刪除</a>                
                 </td>
-              </tr>  
+            </tr>  
             `;
             }            
     })
+
+//編輯後台單一景點
+axios.get(getOneVista)    
+    .then(        
+        function(res){
+            const data = res.data;
+            const dataContainer = document.getElementById('vistaContainer');
+            dataContainer.innerHTML = JSON.stringify(data);
+        }
+    )
+    .catch(error => {
+        console.error('Error loading data:', error);
+    });
