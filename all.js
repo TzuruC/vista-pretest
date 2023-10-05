@@ -1,7 +1,7 @@
 import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
-const renderUrl = 'https://demo-yu09.onrender.com/vistas';
+const renderUrl = 'https://demo-yu09.onrender.com/vistas/';
 
 if (window.location.href.includes('index.html')) {
     //取得前台景點列表
