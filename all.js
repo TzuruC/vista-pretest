@@ -1,13 +1,11 @@
 import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
+const renderUrl = 'https://demo-yu09.onrender.com/vistas';
 
-if (window.location.href.includes('example.com/page1')) {
-    // 在特定页面执行代码
-}
 if (window.location.href.includes('index.html')) {
     //取得前台景點列表
-    axios.get('http://localhost:3000/vistas/')
+    axios.get(renderUrl)
     .then(
         function(res){
             let ary = res.data;
