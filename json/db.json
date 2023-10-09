@@ -1,5 +1,18 @@
 {
-  "users": [],
+  "users": [
+    {
+      "email": "olivier@mail.com",
+      "password": "$2a$10$SnMFqEfXjkwKuiTppKnNROXN4y1TwgjddDYpTWpth/sTfBvm9TtTO",
+      "role": "user",
+      "id": 1
+    },
+    {
+      "email": "tcadmin@mail.com",
+      "password": "$2a$10$ERNhuQgbus0XCJRh2LJjyupDYvX71rbGNX4iJ3aYQrPHSVw.8hN1C",
+      "role": "admin",
+      "id": 2
+    }
+  ],
   "vistas": [
     {
       "id": 1,
