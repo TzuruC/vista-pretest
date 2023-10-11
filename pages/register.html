@@ -25,5 +25,20 @@
     
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script type="module" src="../all.js"></script>
+    <script>
+
+        function signUp(){
+            axios.post(" http://localhost:3000/users",{
+                "email": "tcadmin@mail.com",
+                "password": "admin666"
+            })
+            .then(function(res){
+                console.log(res.data);
+            })
+            .catch(function(err){
+                console.log(err.response);
+            });
+        }
+    </script>
   </body>
 </html>

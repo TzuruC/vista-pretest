@@ -1,7 +1,8 @@
+// import { forEach } from 'json-server-auth';
 import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
-const renderUrl = 'https://demo-yu09.onrender.com/vistas/';
+const renderUrl = 'http://localhost:3000/vistas';
 
 if (window.location.href.includes('index.html')) {
     //取得前台景點列表
@@ -199,4 +200,123 @@ if (window.location.href.includes('admin-add.html')) {
         });  
     });
 }
+
+
+
+
+function checkEmailAddress(mail) {
+    let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (mail.match(mailformat)){
+        console.log(true);
+    } else{
+        console.log(false);
+    }
+};
+
+
+
+
+//登入
+if (window.location.href.includes('login.html')) {
+let token="";
+const loginBtn = document.querySelector("#loginBtn");
+//點擊送出btn
+loginBtn.addEventListener('click', function(e){
+    e.preventDefault();
+
+    //取得使用者輸入帳號密碼
+    const loginMail = document.getElementById('loginMail').value;
+    const loginPsw = document.getElementById('loginPsw').value;
+
+    //發送login請求
+    axios.post('http://localhost:3000/login',{
+        "email": loginMail,
+        "password": loginPsw
+    })
+    .then(function(res){
+        //取得token並存在localstorage
+        token = res.data.accessToken;     
+        if(token){
+            console.log("登入成功");
+            localStorage.setItem("vistaLoginToken",token);
+            alert("登入成功!");
+            window.location.href = 'index.html';
+        } else {
+            console.log("帳號或密碼錯誤");   
+        }
+        // localStorage.getItem("test"); 值是saved
+    })
+    .catch(function(err){
+        console.log(err.response);
+    })
+})
+}
+
+// 判斷是否有登入
+
+let islogin = localStorage.getItem("vistaLoginToken"); // null
+let logUI;
+let saveVistaUI;
+let adminUI;
+// const logoutState = document.querySelectorAll(".logoutState");
+document.addEventListener("DOMContentLoaded", function () { 
+    
+    if (islogin) { // 使用者已經登入        
+        if (window.location.href.includes('login.html')) {
+        // 前台判斷
+        logUI = document.querySelector("#logUI");    
+        saveVistaUI = document.querySelector("#saveVista");
+        // 顯示收藏、登出按鈕
+        logUI.innerHTML = `
+        <a class="mx-2" href="">收藏</a>
+        <a class="logoutBtn ml-2" href="">登出</a>`;
+        // 在景點頁加入已收藏、未收藏介面
+        if (window.location.href.includes('vista-detail.html')) {
+        saveVistaUI.innerHTML = `
+        <a href="">已收藏</a>
+        <a href="">未收藏 </a>`;    
+        }    
+        } 
+            // // 後台判斷
+            // adminUI = documten.querySelector("#adminUI");
+            // // 顯示管理員介面
+            // adminUI.innerHTML = `
+            // <a class="btn btn-outline-primary mx-1" href="admin-log.html">回到後台</a>
+            // <a class="btn btn-outline-primary mx-1" href="index.html">回到首頁</a>
+            // <a class="btn btn-outline-primary mx-1" href="admin-add.html">新增景點</a>
+            // <a id="adminLogout" class="btn btn-outline-primary ml-2" href="admin-log.html">登出</a>`;                
+        
+    } else {
+        if (window.location.href.includes('login.html')) {
+        logUI.innerHTML = `
+        <a class="btn btn-outline-primary mx-2" href="login.html">登入</a>
+        <a class="btn btn-outline-primary" href="register.html">註冊</a>`;
+        }
+    }
+});
+
+
+
+
+//登出
+let logoutBtn;
+// 判斷是否有登入再執行，以免沒事跳錯
+document.addEventListener("DOMContentLoaded", function () { 
+    logoutBtn = document.querySelectorAll(".logoutBtn"); 
+    if (islogin) {
+        console.log(logoutBtn);
+        // 點擊登出按鈕
+        logoutBtn.forEach(logoutBtn => {
+            logoutBtn.addEventListener('click', function(e){
+                e.preventDefault();
+                // 清空token
+                localStorage.removeItem("vistaLoginToken");
+                // reload 或 跳轉畫面
+                alert("已登出");
+                window.location.href = 'index.html';
+            })   
+        });
+    }
+});
+
 
