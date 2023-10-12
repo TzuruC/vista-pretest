@@ -2,11 +2,12 @@
 import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
-const renderUrl = 'http://localhost:3000/vistas';
+// 資料庫網域
+const renderUrl = 'http://localhost:3000/';
 
-if (window.location.href.includes('index.html')) {
-    //取得前台景點列表
-    axios.get(renderUrl)
+//取得前台景點列表
+if (window.location.href.includes('index.html')) {    
+    axios.get(renderUrl+'vistas')
     .then(
         function(res){
             let ary = res.data;
@@ -32,11 +33,9 @@ if (window.location.href.includes('index.html')) {
             }            
     })
 }
-
-
+//取得前台單一景點
 if (window.location.href.includes('vista-detail.html')) {
-    //取得前台單一景點
-    axios.get('http://localhost:3000/vistas/')    
+    axios.get(renderUrl+'vistas')    
     .then(        
         function(res){
             const urlParams = new URLSearchParams(window.location.search);
@@ -57,10 +56,9 @@ if (window.location.href.includes('vista-detail.html')) {
         console.error('Error loading data:', error);
     });
 }
-
-if (window.location.href.includes('admin-list.html')) {
 //取得後台景點列表  //刪除景點功能
-axios.get('http://localhost:3000/vistas/')
+if (window.location.href.includes('admin-list.html')) {
+axios.get(renderUrl+'vistas')
     .then(
         function(res){
             let ary = res.data;
@@ -111,10 +109,9 @@ axios.get('http://localhost:3000/vistas/')
         console.error('Error loading data:', error);
     });
 }
-
+//編輯後台單一景點
 if (window.location.href.includes('admin-edit.html')) {
-   //編輯後台單一景點
-    axios.get('http://localhost:3000/vistas/')    
+    axios.get(renderUrl+'vistas')    
     .then(        
         function(res){
             const urlParams = new URLSearchParams(window.location.search);
@@ -163,10 +160,8 @@ if (window.location.href.includes('admin-edit.html')) {
         console.error('Error loading data:', error);
     });
 }
-
-
+//新增後台單一景點
 if (window.location.href.includes('admin-add.html')) {
-   //新增後台單一景點
     const addForm = document.getElementById('addForm');
     addForm.addEventListener('submit', function(e){
         e.preventDefault(); //阻止默認提交
@@ -190,7 +185,7 @@ if (window.location.href.includes('admin-add.html')) {
             "description":newDescription,
         }
         // POST 請求
-        axios.post('http://localhost:3000/vistas', newData)
+        axios.post(renderUrl+'vistas', newData)
         .then(function (response) {
             alert("新增成功");
             window.location.href = 'admin-list.html';
@@ -201,22 +196,58 @@ if (window.location.href.includes('admin-add.html')) {
     });
 }
 
+// // email 格式驗證
+// function checkEmailAddress(mail) {
+//     let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//     if (mail.match(mailformat)){
+//         console.log(true);
+//     } else{
+//         console.log(false);
+//     }
+// };
 
 
+// 註冊(只有前台)
+if (window.location.href.includes('register.html')) {
+    const registerBtn = document.querySelector('#registerBtn');    
+    // 點擊按鈕按鈕 ︰註冊帳號
+    registerBtn.addEventListener('click',function(e){
+        e.preventDefault();
+        
+        const registerEmail = document.querySelector('#registerEmail');
+        const alertEmail = document.querySelector('#alertEmail');
+        const registerPsw = document.querySelector('#registerPsw');
+        const alertPsw = document.querySelector('#alertPsw');
+        // 輸入帳號
+        
+        //傳送post
+        axios.post(renderUrl + 'register',{
+            "email": registerEmail.value,
+            "password": registerPsw.value,
+            "role": "user"
+        })
+        .then(function(res){            
+            alert("註冊成功");
+            // 我想在這裡加入自動登入功能
+            window.location.href = 'index.html';
+        })
+        .catch(function(err){
+            if (err.response.data == 'Email and password are required'){
+                alertEmail.textContent = '*請輸入註冊用信箱!';
+                alertPsw.textContent = '*請輸入密碼！';
+                registerPsw.value = '';
+            }else if(err.response.data == 'Email format is invalid'){
+                alertEmail.textContent = '*信箱格式錯誤！';
+                registerPsw.value = '';
+            }else if(err.response.data == 'Password is too short'){
+                alertPsw.textContent = '*密碼過短！請輸入 4 個以上數字或字母組合';
+                registerPsw.value = '';
+            }
+        })
+    })   
+}
 
-function checkEmailAddress(mail) {
-    let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (mail.match(mailformat)){
-        console.log(true);
-    } else{
-        console.log(false);
-    }
-};
-
-
-
-
-//登入
+//登入前台
 if (window.location.href.includes('login.html')) {
 let token="";
 const loginBtn = document.querySelector("#loginBtn");
@@ -226,12 +257,15 @@ loginBtn.addEventListener('click', function(e){
 
     //取得使用者輸入帳號密碼
     const loginMail = document.getElementById('loginMail').value;
+    const alertEmail = document.querySelector('#alertEmail');
     const loginPsw = document.getElementById('loginPsw').value;
+    const alertPsw = document.querySelector('#alertPsw');
 
     //發送login請求
-    axios.post('http://localhost:3000/login',{
+    axios.post(renderUrl + 'login',{
         "email": loginMail,
-        "password": loginPsw
+        "password": loginPsw,
+        "role":"user"
     })
     .then(function(res){
         //取得token並存在localstorage
@@ -247,24 +281,45 @@ loginBtn.addEventListener('click', function(e){
         // localStorage.getItem("test"); 值是saved
     })
     .catch(function(err){
-        console.log(err.response);
+        console.log(err.response.data);
+        if (err.response.data == 'Email and password are required'){
+            alertEmail.textContent = '*請輸入註冊用信箱!';
+            alertPsw.textContent = '*請輸入密碼！';
+            loginPsw.value = '';
+        }else if(err.response.data == 'Email format is invalid'){
+            alertEmail.textContent = '*信箱格式錯誤！';
+            loginPsw.value = '';
+        }else if(err.response.data == 'Password is too short'){
+            alertPsw.textContent = '*密碼過短！請輸入 4 個以上數字或字母組合';
+            loginPsw.value = '';
+        }else if(err.response.data == 'Cannot find user'){
+            alertEmail.textContent = '*此信箱尚未註冊';
+            loginPsw.textContent = ''; //想清空但是失敗了
+        }
     })
 })
 }
 
-// 判斷是否有登入
+// 登入後台
+if (window.location.href.includes('admin-log.html')) {
+    let token="";
+}
 
+
+
+// // 判斷是否有登入
 let islogin = localStorage.getItem("vistaLoginToken"); // null
-let logUI;
+let logUI = document.querySelector("#logUI"); 
 let saveVistaUI;
 let adminUI;
 // const logoutState = document.querySelectorAll(".logoutState");
-document.addEventListener("DOMContentLoaded", function () { 
-    
-    if (islogin) { // 使用者已經登入        
-        if (window.location.href.includes('login.html')) {
+document.addEventListener("DOMContentLoaded", function () {     
+    if (islogin) { // 使用者已經登入    
+        // 登入頁以外的頁面都渲染介面   
+        if (!window.location.href.includes('login.html') && !window.location.href.includes('register.html') && !window.location.href.includes('admin-log.html')) {
+                
         // 前台判斷
-        logUI = document.querySelector("#logUI");    
+        // logUI = document.querySelector("#logUI");    
         saveVistaUI = document.querySelector("#saveVista");
         // 顯示收藏、登出按鈕
         logUI.innerHTML = `
@@ -275,23 +330,22 @@ document.addEventListener("DOMContentLoaded", function () {
         saveVistaUI.innerHTML = `
         <a href="">已收藏</a>
         <a href="">未收藏 </a>`;    
-        }    
+        }  
+        // 後台判斷
+        adminUI = documten.querySelector("#adminUI");
+        // 顯示管理員介面
+        adminUI.innerHTML = `
+        <a class="btn btn-outline-primary mx-1" href="admin-log.html">回到後台</a>
+        <a class="btn btn-outline-primary mx-1" href="index.html">回到首頁</a>
+        <a class="btn btn-outline-primary mx-1" href="admin-add.html">新增景點</a>
+        <a id="adminLogout" class="btn btn-outline-primary ml-2" href="admin-log.html">登出</a>`;
         } 
-            // // 後台判斷
-            // adminUI = documten.querySelector("#adminUI");
-            // // 顯示管理員介面
-            // adminUI.innerHTML = `
-            // <a class="btn btn-outline-primary mx-1" href="admin-log.html">回到後台</a>
-            // <a class="btn btn-outline-primary mx-1" href="index.html">回到首頁</a>
-            // <a class="btn btn-outline-primary mx-1" href="admin-add.html">新增景點</a>
-            // <a id="adminLogout" class="btn btn-outline-primary ml-2" href="admin-log.html">登出</a>`;                
-        
-    } else {
-        if (window.location.href.includes('login.html')) {
+    }else{
+        if (!window.location.href.includes('login.html') && !window.location.href.includes('register.html')) {
         logUI.innerHTML = `
         <a class="btn btn-outline-primary mx-2" href="login.html">登入</a>
-        <a class="btn btn-outline-primary" href="register.html">註冊</a>`;
-        }
+        <a class="btn btn-outline-primary" href="register.html">註冊</a>`;     
+        }   
     }
 });
 

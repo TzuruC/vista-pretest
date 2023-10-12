@@ -14,10 +14,12 @@
       <h2 class="fw-bold">註冊</h2>
       <div class="my-4">
       <label class="mt-3 mb-1" for="email">信箱</label>
-      <input class="form-control" name="email" type="text">
-      <label class="mt-3 mb-1" for="pswd">密碼</label>
-      <input class="form-control" name="pswd" type="password">
-      <button type="button" class="me-2 my-3 btn btn-outline-primary">註冊帳號</button>      
+      <input id="registerEmail" class="form-control" name="email" type="text">
+      <span id="alertEmail" class="alert-span text-danger d-block fs-6"></span>
+      <label class="mt-3 mb-1" for="psw">密碼</label>
+      <input id="registerPsw" class="form-control" name="psw" type="password">
+      <span id="alertPsw" class="alert-span text-danger d-block fs-6"></span>
+      <button id="registerBtn" type="button" class="me-2 my-3 btn btn-outline-primary">註冊帳號</button>      
       </div>
     </div>
 
@@ -25,20 +27,6 @@
     
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script type="module" src="../all.js"></script>
-    <script>
-
-        function signUp(){
-            axios.post(" http://localhost:3000/users",{
-                "email": "tcadmin@mail.com",
-                "password": "admin666"
-            })
-            .then(function(res){
-                console.log(res.data);
-            })
-            .catch(function(err){
-                console.log(err.response);
-            });
-        }
-    </script>
+    
   </body>
 </html>

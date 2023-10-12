@@ -10,7 +10,27 @@
       "email": "tcadmin@mail.com",
       "password": "$2a$10$ERNhuQgbus0XCJRh2LJjyupDYvX71rbGNX4iJ3aYQrPHSVw.8hN1C",
       "role": "admin",
+      "vistaId":1,
       "id": 2
+    },
+    {
+      "email": "tcadmin@gmail.com",
+      "password": "$2a$10$bnkPhsGkwtxpet.vSWk7kOmaUXcD6NNUbK5u22uBI2IwmoTe3jeVy",
+      "role": "user",
+      "id": 3
+    },
+    {
+      "email": "iii@mail.com",
+      "password": "$2a$10$QUVL7k3sRZTLZ5K5DF2B0OTnXnSUpucsOwDkpa3iW5RC3RWzVGBvO",
+      "role": "user",
+      "vistaId":1,
+      "id": 4
+    },
+    {
+      "email": "iiii@mail.com",
+      "password": "$2a$10$6Zx6Coi6zmdBwAiv5LJg..AdJEixki/YKLl0gxcEPnGcrI/DuV9..",
+      "role": "user",
+      "id": 5
     }
   ],
   "vistas": [
