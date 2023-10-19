@@ -215,7 +215,8 @@ if (window.location.href.includes('register.html')) {
         axios.post(renderUrl + 'register',{
             "email": registerEmail.value,
             "password": registerPsw.value,
-            "role": "user"
+            "role": "user",
+            "vistaId":[]
         })
         .then(function(res){            
             alert("註冊成功");
@@ -239,9 +240,12 @@ if (window.location.href.includes('register.html')) {
 }
 
 //登入前台
-let userRole;
+
 if (window.location.href.includes('login.html')) {
 let token="";
+let userId="";
+let userRole="";
+let vistaSaved="";
 const loginBtn = document.querySelector("#loginBtn");
 //點擊送出btn
 loginBtn.addEventListener('click', function(e){
@@ -261,17 +265,22 @@ loginBtn.addEventListener('click', function(e){
     })
     .then(function(res){
         //取得token並存在localstorage
-        token = res.data.accessToken;     
+        token = res.data.accessToken;  
+        userId = res.data.user.id;
+        userRole = res.data.user.role;
+        vistaSaved = res.data.user;
+        console.log(vistaSaved);
         if(token){
             console.log("登入成功");
-            // res.data.
             localStorage.setItem("vistaLoginToken",token);
+            localStorage.setItem("userRole",userRole);
+            localStorage.setItem("vistaSaved",vistaSaved);
+            localStorage.setItem("userId",userId);
             alert("登入成功!");
             window.location.href = 'index.html';
         } else {
             console.log("帳號或密碼錯誤");   
         }
-        // localStorage.getItem("test"); 值是saved
     })
     .catch(function(err){
         console.log(err.response.data);
@@ -298,7 +307,7 @@ loginBtn.addEventListener('click', function(e){
 // // 判斷是否有登入
 let islogin = localStorage.getItem("vistaLoginToken"); // null
 let logUI = document.querySelector("#logUI"); 
-let saveVistaUI;
+
 let adminUI;
 // const logoutState = document.querySelectorAll(".logoutState");
 document.addEventListener("DOMContentLoaded", function () {     
@@ -307,19 +316,17 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!window.location.href.includes('login.html') && !window.location.href.includes('register.html') && !window.location.href.includes('admin-signin.html') && !window.location.href.includes('admin-signin.html')) {
                 
         // 前台判斷
-        saveVistaUI = document.querySelector("#saveVista");
+        
         // 顯示收藏、登出按鈕
         logUI.innerHTML = `
-        <a class="mx-2" href="">收藏</a>
+        <a class="mx-2" href="vista-saved.html">收藏</a>
         <a class="logoutBtn ml-2" href="">登出</a>`;
         // 在景點頁加入已收藏、未收藏介面
-        if (window.location.href.includes('vista-detail.html')) {
-        saveVistaUI.innerHTML = `
-        <a href="">已收藏</a>
-        <a href="">未收藏 </a>`;  
-        getSavedVista()  
+        if (window.location.href.includes('vista-detail.html')) {       
+            
+                
         }         
-        }else if(window.location.href.includes('admin-signin.html')){
+        }else if (window.location.href.includes('admin-signin.html')) {
             // 後台判斷
             adminUI = document.querySelector("#adminUI");
             adminUI.innerHTML = '';
@@ -342,7 +349,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // admin 檢查權限
 if (window.location.href.includes('admin')) {
     // 不知道為什麼 admin-signin.html 沒有被擋
-    if (!islogin) {
+    if (!islogin || userRole!='admin') {
         // 會快速閃過html內容
         document.querySelector('body').innerHTML='';
         alert('您沒有權限進入!');
@@ -352,10 +359,9 @@ if (window.location.href.includes('admin')) {
         axios.get(renderUrl+'users') 
         .then(
             function(res){
-                console.log(res.data)
+                console.log('滿足登入權限')
             }
         )
-        //檢查是不是 == admin
     };
 };
 
@@ -394,12 +400,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // 收藏/未收藏
-let savedVistas = [];
-
-
-function getSavedVista(){
-    axios.get(renderUrl+'users?_expand=post')
-    .then(function(res){
-        console.log(res);
+if (window.location.href.includes('vista-saved.html')) {
+    let uservistaId = localStorage.getItem("userId");
+    let saveVistaArr = [];
+    let collectVista = document.querySelector('#collectVista');    
+    axios.get(renderUrl+'collects?_expand=vista')
+    .then(function(res){        
+        saveVistaArr = res.data;
+        saveVistaArr.forEach(function(obj){
+            if(obj.userId == uservistaId){
+                collectVista.innerHTML+=`
+        <div class="col-sm-3">
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">${obj.vista.name}</h5>
+                <p class="card-text">${obj.vista.description.substring(0,16)}...</p>
+                <a href="vista-detail.html?id=${obj.vistaId-1}" class="btn btn-primary">看詳細</a>
+            </div>
+            </div>
+        </div>
+        `;
+            }            
+        });        
     })
-}
+    .catch(function (error) {
+        console.error("發生錯誤:", error);
+    });  
+};
+// 內頁顯示收藏/未收藏
+if (window.location.href.includes('vista-detail.html')) {
+    let uservistaId = localStorage.getItem("userId");
+    let saveVistaUI;
+    let saveVistaArr = [];
+    let saveThisVista;
+    
+    saveVistaUI = document.querySelector("#saveVista");
+    
+    axios.get(renderUrl + 'collects?_expand=vista')
+        .then(function (res) {       
+            saveVistaArr = res.data;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const vistaId = urlParams.get('id');
+            const vistaGetId = Number(vistaId)+1;
+            // 檢查當前的 userId 和頁面的 vistaId 是否相同
+            const isVistaSaved = saveVistaArr.some(
+                // 檢視所有物件內容中屬性 userId 值等於 ls 裡存放 userId
+                // 檢視所有物件內容中屬性 userId 值等於網址取道的 vistaId
+                item => item.userId == uservistaId && item.vistaId == vistaGetId
+            );
+            
+            // 根据结果设置按钮内容
+            if (isVistaSaved) {
+                saveVistaUI.innerHTML = `<a id="vistaSave" class="fs-7 btn btn-primary  href="">已收藏</a>`;
+            } else {
+                saveVistaUI.innerHTML = `<a id="vistaUnsave" class="fs-7 btn btn-outline-primary" href="">未收藏</a>`;
+            }
+        })
+        .catch(function (error) {
+            console.error("發生錯誤:", error);
+        });  
+};
+// 點擊內頁收藏/未收藏 移除/加入 收藏
