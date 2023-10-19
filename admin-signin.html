@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>後台登入</title>
-    <script type="module" crossorigin src="/vista-pretest/assets/all-0ded7b48.js"></script>
+    <script type="module" crossorigin src="/vista-pretest/assets/all-2bb66452.js"></script>
     <link rel="stylesheet" href="/vista-pretest/assets/all-c98512e9.css">
   </head>
   <body>
@@ -22,7 +22,7 @@
         <a class="btn btn-outline-primary mx-1" href="admin-signin.html">回到後台</a>
         <a class="btn btn-outline-primary mx-1" href="index.html">回到首頁</a>
         <a class="btn btn-outline-primary mx-1" href="admin-add.html">新增景點</a>
-        <a id="adminLogout" class="btn btn-outline-primary ml-2" href="admin-log.html">登出</a>
+        <a id="adminLogout" class="btn btn-outline-primary ml-2" href="admin-signin.html">登出</a>
     </div>
     </div>
 </div>
@@ -31,12 +31,12 @@
       <h2 class="fw-bold">後台登入</h2>
       <div class="my-4">
       <label class="mt-3 mb-1" for="email">帳號</label>
-      <input class="form-control" name="email" type="text">
+      <input id="loginMail" class="form-control" name="email" type="text">
       <span id="alertEmail" class="alert-span text-danger d-block fs-6"></span>
       <label class="mt-3 mb-1" for="psw">密碼</label>
-      <input class="form-control" name="psw" type="passwor">
+      <input id="loginPsw" class="form-control" name="psw" type="password">
       <span id="alertPsw" class="alert-span text-danger d-block fs-6"></span>
-      <a type="button" class="me-2 my-3 btn btn-outline-primary" href="admin-list.html">登入</a>      
+      <a type="button" id="loginBtn" class="me-2 my-3 btn btn-outline-primary" href="admin-list.html">登入</a>      
       </div>
     </div>
 
