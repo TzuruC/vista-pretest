@@ -427,12 +427,12 @@ if (window.location.href.includes('vista-saved.html')) {
         console.error("發生錯誤:", error);
     });  
 };
+document.addEventListener("DOMContentLoaded", function () {
 // 內頁顯示收藏/未收藏
 if (window.location.href.includes('vista-detail.html')) {
     let uservistaId = localStorage.getItem("userId");
     let saveVistaUI;
     let saveVistaArr = [];
-    let saveThisVista;
     
     saveVistaUI = document.querySelector("#saveVista");
     
@@ -452,13 +452,56 @@ if (window.location.href.includes('vista-detail.html')) {
             
             // 根据结果设置按钮内容
             if (isVistaSaved) {
-                saveVistaUI.innerHTML = `<a id="vistaSave" class="fs-7 btn btn-primary  href="">已收藏</a>`;
-            } else {
-                saveVistaUI.innerHTML = `<a id="vistaUnsave" class="fs-7 btn btn-outline-primary" href="">未收藏</a>`;
-            }
+                saveVistaUI.innerHTML = `<a id="deleteThisCollect" class="btn-sm btn btn-primary  href="">已收藏</a>`;    
+                // 點擊按鈕儲存景點
+                const deleteThisCollect = document.querySelector('#deleteThisCollect');
+                
+                // 點擊按鈕刪除景點
+                deleteThisCollect.addEventListener('click', function(e){
+                    e.preventDefault();
+                    console.log('deleteThisCollect');
+                    axios.get(renderUrl + `collects?vistaId=${vistaGetId}`)              
+                    .then(function(res){    
+                        const deleteCollect = res.data.find(
+                            item => item.userId == uservistaId
+                        ).id;
+                        console.log(deleteCollect);  
+                        axios.delete(renderUrl + `collects/${deleteCollect}`)     
+                        .then (function(res){  
+                            location.reload();
+                        })
+                        .catch(error => {
+                            console.error('刪除失敗︰', error);
+                        });          
+                    })              
+                    .catch(error => {
+                        console.error('刪除失敗︰', error);
+                    });  
+                })                            
+            } else {                
+                saveVistaUI.innerHTML = `<a id="saveThisCollect" class="btn-sm btn btn-outline-primary" href="">未收藏</a>`;     
+                const saveThisCollect = document.querySelector('#saveThisCollect');
+                saveThisCollect.addEventListener('click', function(e){
+                e.preventDefault();
+                console.log('saveThisCollect');
+                const newCollect = {
+                    "userId":uservistaId,
+                    "vistaId":vistaGetId,
+                }
+                console.log(newCollect);
+                axios.post(renderUrl+'collects',newCollect)
+                .then(function(res){
+                    console.log(res);
+                    location.reload();
+                })
+                .catch(function (error) {
+                    console.error("發生錯誤:", error);
+                });  
+                })           
+            }              
         })
         .catch(function (error) {
             console.error("發生錯誤:", error);
         });  
 };
-// 點擊內頁收藏/未收藏 移除/加入 收藏
+})
