@@ -6,6 +6,18 @@
       "role": "user",
       "vistaId": 1,
       "id": 4
+    },
+    {
+      "email": "tcadmin@mail.com",
+      "password": "$2a$10$bMNIxyNLwSkjhIZvDhuoH.IfuAB10.ImJCW6qPmSFxhH83unuTUoW",
+      "role": "admin",
+      "id": 5
+    },
+    {
+      "email": "aaa@mail.com",
+      "password": "$2a$10$0Y44/5FrIH0PQd6You7AzuYw5.rxlSGe1gZTq2CHXQcyjJbA3/.ES",
+      "role": "user",
+      "id": 6
     }
   ],
   "vistas": [
@@ -42,9 +54,14 @@
   ],
   "collects": [
     {
-      "userId": "2",
-      "vistaId": 2,
-      "id": 1
+      "userId": "5",
+      "vistaId": 1,
+      "id": 2
+    },
+    {
+      "userId": "5",
+      "vistaId": 3,
+      "id": 3
     }
   ]
 }

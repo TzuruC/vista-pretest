@@ -3,8 +3,8 @@ import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 // 資料庫網域
-// const renderUrl = 'http://localhost:3000/';
-const renderUrl = 'https://vista-pretest.onrender.com/';
+const renderUrl = 'http://localhost:3000/';
+// const renderUrl = 'https://vista-pretest.onrender.com/';
 
 //取得前台景點列表
 if (window.location.href.includes('index.html')) {    
@@ -90,7 +90,7 @@ axios.get(renderUrl+'vistas')
         
             //html 渲染完成後加上刪除功能
             const deleteButton = document.querySelectorAll(".deleteButton");   
-            console.log(deleteButton); 
+            
             deleteButton.forEach(deleteButton => {
                 deleteButton.addEventListener('click', function(e){
                     e.preventDefault();        
@@ -144,7 +144,6 @@ if (window.location.href.includes('admin-edit.html')) {
                     "name":editName,
                     "description":editDescription,
                 }
-                console.log(editData);
                 // patch 請求
                 axios.patch(renderUrl + `vistas/${ary[vistaId].id}`, editData)
                 .then(function (response) {
@@ -187,7 +186,7 @@ if (window.location.href.includes('admin-add.html')) {
         }
         // POST 請求
         axios.post(renderUrl+'vistas', newData)
-        .then(function (response) {
+        .then(function (res) {
             alert("新增成功");
             window.location.href = 'admin-list.html';
         })
@@ -210,13 +209,13 @@ if (window.location.href.includes('register.html')) {
         const registerPsw = document.querySelector('#registerPsw');
         const alertPsw = document.querySelector('#alertPsw');
         // 輸入帳號
-        
-        //傳送post
-        axios.post(renderUrl + 'users',{
+        const newUser = {
             "email": registerEmail.value,
             "password": registerPsw.value,
             "role": "user"
-        })
+        }
+        //傳送post
+        axios.post(renderUrl + 'users', newUser)
         .then(function(res){            
             alert("註冊成功");
             // 我想在這裡加入自動登入功能
@@ -268,9 +267,7 @@ loginBtn.addEventListener('click', function(e){
         userId = res.data.user.id;
         userRole = res.data.user.role;
         vistaSaved = res.data.user;
-        console.log(vistaSaved);
         if(token){
-            console.log("登入成功");
             localStorage.setItem("vistaLoginToken",token);
             localStorage.setItem("userRole",userRole);
             localStorage.setItem("vistaSaved",vistaSaved);
@@ -282,7 +279,6 @@ loginBtn.addEventListener('click', function(e){
         }
     })
     .catch(function(err){
-        console.log(err.response.data);
         if (err.response.data == 'Email and password are required'){
             alertEmail.textContent = '*請輸入註冊用信箱!';
             alertPsw.textContent = '*請輸入密碼！';
@@ -295,6 +291,9 @@ loginBtn.addEventListener('click', function(e){
             loginPsw = '';
         }else if(err.response.data == 'Cannot find user'){
             alertEmail.textContent = '*此信箱尚未註冊';
+            loginPsw = ''; //想清空但是失敗了
+        }else if(err.response.data == 'Incorrect password'){
+            alertPsw.textContent = '*密碼錯誤';
             loginPsw = ''; //想清空但是失敗了
         }
     })
@@ -345,10 +344,74 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+
+// 登入後台
+if (window.location.href.includes('admin-signin.html')) {
+    let token="";
+    let userId="";
+    let userRole="";
+    let vistaSaved="";
+    const loginBtn = document.querySelector("#loginBtn");
+    //點擊送出btn
+    loginBtn.addEventListener('click', function(e){
+        e.preventDefault();
+    
+        //取得使用者輸入帳號密碼
+        const loginMail = document.getElementById('loginMail').value;
+        const alertEmail = document.querySelector('#alertEmail');
+        const loginPsw = document.getElementById('loginPsw').value;
+        const alertPsw = document.querySelector('#alertPsw');
+    
+        //發送login請求
+        axios.post(renderUrl + 'login',{
+            "email": loginMail,
+            "password": loginPsw
+        })
+        .then(function(res){
+            //取得token並存在localstorage
+            token = res.data.accessToken;  
+            userId = res.data.user.id;
+            userRole = res.data.user.role;
+            vistaSaved = res.data.user;
+            if(token){
+                localStorage.setItem("vistaLoginToken",token);
+                localStorage.setItem("userRole",userRole);
+                localStorage.setItem("vistaSaved",vistaSaved);
+                localStorage.setItem("userId",userId);
+                alert("登入成功!");
+                window.location.href = 'admin-list.html';
+            } else {
+                console.log("帳號或密碼錯誤");   
+            }
+        })
+        .catch(function(err){
+            if (err.response.data == 'Email and password are required'){
+                alertEmail.textContent = '*請輸入註冊用信箱!';
+                alertPsw.textContent = '*請輸入密碼！';
+                loginPsw = '';
+            }else if(err.response.data == 'Email format is invalid'){
+                alertEmail.textContent = '*信箱格式錯誤！';
+                loginPsw = '';
+            }else if(err.response.data == 'Password is too short'){
+                alertPsw.textContent = '*密碼過短！請輸入 4 個以上數字或字母組合';
+                loginPsw = '';
+            }else if(err.response.data == 'Cannot find user'){
+                alertEmail.textContent = '*此信箱尚未註冊';
+                loginPsw = ''; //想清空但是失敗了
+            }else if(err.response.data == 'Incorrect password'){
+                alertPsw.textContent = '*密碼錯誤';
+                loginPsw = ''; //想清空但是失敗了
+            }
+        })
+    })
+    }
+
+
 // admin 檢查權限
 if (window.location.href.includes('admin')) {
     // 不知道為什麼 admin-signin.html 沒有被擋
-    if (!islogin || userRole!='admin') {
+    const authRole = localStorage.getetItem("userRole");
+    if (authRole!=='admin') {
         // 會快速閃過html內容
         document.querySelector('body').innerHTML='';
         alert('您沒有權限進入!');
@@ -378,6 +441,10 @@ document.addEventListener("DOMContentLoaded", function () {
             logoutBtn.addEventListener('click', function(e){
                 e.preventDefault();
                 localStorage.removeItem("vistaLoginToken");
+                localStorage.removeItem("userId");
+                localStorage.removeItem("userRole");
+                localStorage.removeItem("vistaSaved");
+                alert("已登出");
                 window.location.href = 'admin-signin.html';
             })
         }else{
@@ -387,6 +454,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.preventDefault();
                 // 清空token
                 localStorage.removeItem("vistaLoginToken");
+                localStorage.removeItem("userId");
+                localStorage.removeItem("userRole");
+                localStorage.removeItem("vistaSaved");
                 // reload 或 跳轉畫面
                 alert("已登出");
                 window.location.href = 'index.html';
@@ -420,7 +490,10 @@ if (window.location.href.includes('vista-saved.html')) {
         </div>
         `;
             }            
-        });        
+        });   
+        if(collectVista.innerHTML == false){
+            collectVista.innerHTML = `<a href="index.html" class="btn btn-primary">尚未收藏景點，返回列表瀏覽更多景點吧！</a>`;
+        }
     })
     .catch(function (error) {
         console.error("發生錯誤:", error);
@@ -458,13 +531,11 @@ if (window.location.href.includes('vista-detail.html')) {
                 // 點擊按鈕刪除景點
                 deleteThisCollect.addEventListener('click', function(e){
                     e.preventDefault();
-                    console.log('deleteThisCollect');
                     axios.get(renderUrl + `collects?vistaId=${vistaGetId}`)              
                     .then(function(res){    
                         const deleteCollect = res.data.find(
                             item => item.userId == uservistaId
                         ).id;
-                        console.log(deleteCollect);  
                         axios.delete(renderUrl + `collects/${deleteCollect}`)     
                         .then (function(res){  
                             location.reload();
@@ -482,15 +553,12 @@ if (window.location.href.includes('vista-detail.html')) {
                 const saveThisCollect = document.querySelector('#saveThisCollect');
                 saveThisCollect.addEventListener('click', function(e){
                 e.preventDefault();
-                console.log('saveThisCollect');
                 const newCollect = {
                     "userId":uservistaId,
                     "vistaId":vistaGetId,
                 }
-                console.log(newCollect);
                 axios.post(renderUrl+'collects',newCollect)
                 .then(function(res){
-                    console.log(res);
                     location.reload();
                 })
                 .catch(function (error) {
