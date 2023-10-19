@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>註冊</title>
-    <script type="module" crossorigin src="/vista-pretest/assets/all-d42fff0a.js"></script>
-    <link rel="stylesheet" href="/vista-pretest/assets/all-63f821bb.css">
+    <script type="module" crossorigin src="/vista-pretest/assets/all-26fbd86e.js"></script>
+    <link rel="stylesheet" href="/vista-pretest/assets/all-7d8952b7.css">
   </head>
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="#">LOGO</a>
+    <a class="navbar-brand fw-bold" href="index.html">LOGO</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
     </button>
@@ -28,30 +28,18 @@
       <h2 class="fw-bold">註冊</h2>
       <div class="my-4">
       <label class="mt-3 mb-1" for="email">信箱</label>
-      <input class="form-control" name="email" type="text">
-      <label class="mt-3 mb-1" for="pswd">密碼</label>
-      <input class="form-control" name="pswd" type="password">
-      <button type="button" class="me-2 my-3 btn btn-outline-primary">註冊帳號</button>      
+      <input id="registerEmail" class="form-control" name="email" type="text">
+      <span id="alertEmail" class="alert-span text-danger d-block fs-6"></span>
+      <label class="mt-3 mb-1" for="psw">密碼</label>
+      <input id="registerPsw" class="form-control" name="psw" type="password">
+      <span id="alertPsw" class="alert-span text-danger d-block fs-6"></span>
+      <button id="registerBtn" type="button" class="me-2 my-3 btn btn-outline-primary">註冊帳號</button>      
       </div>
     </div>
 
         
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     
-    <script>
-
-        function signUp(){
-            axios.post(" http://localhost:3000/users",{
-                "email": "tcadmin@mail.com",
-                "password": "admin666"
-            })
-            .then(function(res){
-                console.log(res.data);
-            })
-            .catch(function(err){
-                console.log(err.response);
-            });
-        }
-    </script>
+    
   </body>
 </html>
