@@ -4,7 +4,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 // 資料庫網域
 // const renderUrl = 'http://localhost:3000/';
-const renderUrl = 'https://demo-yu09.onrender.com/';
+const renderUrl = 'https://vista-pretest.onrender.com';
 
 //取得前台景點列表
 if (window.location.href.includes('index.html')) {    
@@ -146,11 +146,7 @@ if (window.location.href.includes('admin-edit.html')) {
                 }
                 console.log(editData);
                 // patch 請求
-<<<<<<< HEAD
                 axios.patch(renderUrl + `vistas/${ary[vistaId].id}`, editData)
-=======
-                axios.patch(renderUrl+`vistas/${ary[vistaId].id}`, editData)
->>>>>>> cac5e52e67ab84fcd52a9da83576ac3399391354
                 .then(function (response) {
                     alert("資料儲存成功");
                     location.reload();
