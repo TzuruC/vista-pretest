@@ -95,7 +95,7 @@ axios.get(renderUrl+'vistas')
                 deleteButton.addEventListener('click', function(e){
                     e.preventDefault();        
                     let deleteId = this.getAttribute('data-id');
-                    axios.delete(`http://localhost:3000/vistas/${deleteId}`)              
+                    axios.delete(renderUrl + `vistas/${deleteId}`)              
                     .then(function(res){                    
                         alert('刪除成功');
                         location.reload();
@@ -146,7 +146,7 @@ if (window.location.href.includes('admin-edit.html')) {
                 }
                 console.log(editData);
                 // patch 請求
-                axios.patch(`http://localhost:3000/vistas/${ary[vistaId].id}`, editData)
+                axios.patch(renderUrl + `vistas/${ary[vistaId].id}`, editData)
                 .then(function (response) {
                     alert("資料儲存成功");
                     location.reload();

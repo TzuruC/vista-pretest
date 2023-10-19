@@ -40,5 +40,11 @@
       "id": 6
     }
   ],
-  "collects": []
+  "collects": [
+    {
+      "userId": "2",
+      "vistaId": 2,
+      "id": 1
+    }
+  ]
 }
