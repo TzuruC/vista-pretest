@@ -212,11 +212,10 @@ if (window.location.href.includes('register.html')) {
         // 輸入帳號
         
         //傳送post
-        axios.post(renderUrl + 'register',{
+        axios.post(renderUrl + 'users',{
             "email": registerEmail.value,
             "password": registerPsw.value,
-            "role": "user",
-            "vistaId":[]
+            "role": "user"
         })
         .then(function(res){            
             alert("註冊成功");
