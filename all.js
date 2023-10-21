@@ -3,8 +3,8 @@ import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 // 資料庫網域
-const renderUrl = 'http://localhost:3000/';
-// const renderUrl = 'https://vista-pretest.onrender.com/';
+// const renderUrl = 'http://localhost:3000/';
+const renderUrl = 'https://vista-pretest.onrender.com/';
 
 //取得前台景點列表
 if (window.location.href.includes('index.html')) {    
