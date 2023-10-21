@@ -272,7 +272,7 @@ loginBtn.addEventListener('click', function(e){
             localStorage.setItem("userRole",userRole);
             localStorage.setItem("vistaSaved",vistaSaved);
             localStorage.setItem("userId",userId);
-            alert("登入成功!");
+            alert(`${userRole} 登入成功!`);
             window.location.href = 'index.html';
         } else {
             console.log("帳號或密碼錯誤");   
@@ -373,13 +373,15 @@ if (window.location.href.includes('admin-signin.html')) {
             userId = res.data.user.id;
             userRole = res.data.user.role;
             vistaSaved = res.data.user;
-            if(token){
+            if(token && userRole==='admin'){
                 localStorage.setItem("vistaLoginToken",token);
                 localStorage.setItem("userRole",userRole);
                 localStorage.setItem("vistaSaved",vistaSaved);
                 localStorage.setItem("userId",userId);
                 alert("登入成功!");
                 window.location.href = 'admin-list.html';
+            }else if(token && userRole!=='admin'){
+                alert("您沒有權限進入!");
             } else {
                 console.log("帳號或密碼錯誤");   
             }
@@ -408,9 +410,10 @@ if (window.location.href.includes('admin-signin.html')) {
 
 
 // admin 檢查權限
-if (window.location.href.includes('admin')) {
+if (window.location.href.includes('admin') && !window.location.href.includes('admin-signin.html')) {
     // 不知道為什麼 admin-signin.html 沒有被擋
-    const authRole = localStorage.getetItem("userRole");
+    const authRole = localStorage.getItem("userRole");
+    console.log(authRole);
     if (authRole!=='admin') {
         // 會快速閃過html內容
         document.querySelector('body').innerHTML='';

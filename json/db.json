@@ -8,16 +8,16 @@
       "id": 4
     },
     {
-      "email": "tcadmin@mail.com",
-      "password": "$2a$10$bMNIxyNLwSkjhIZvDhuoH.IfuAB10.ImJCW6qPmSFxhH83unuTUoW",
-      "role": "admin",
-      "id": 5
-    },
-    {
       "email": "aaa@mail.com",
       "password": "$2a$10$0Y44/5FrIH0PQd6You7AzuYw5.rxlSGe1gZTq2CHXQcyjJbA3/.ES",
       "role": "user",
       "id": 6
+    },
+    {
+      "email": "tcadmin@mail.com",
+      "password": "$2a$10$o5Ww7VfORygp79YKb.WcJe56toL8p5RaHcDjPqdGvBAv0iUJl0z/O",
+      "role": "admin",
+      "id": 7
     }
   ],
   "vistas": [
@@ -43,25 +43,9 @@
     },
     {
       "name": "225566",
-      "description": "123345566",
+      "description": "4444444444",
       "id": 5
-    },
-    {
-      "name": "6655",
-      "description": "52222584",
-      "id": 6
     }
   ],
-  "collects": [
-    {
-      "userId": "5",
-      "vistaId": 1,
-      "id": 2
-    },
-    {
-      "userId": "5",
-      "vistaId": 3,
-      "id": 3
-    }
-  ]
+  "collects": []
 }
